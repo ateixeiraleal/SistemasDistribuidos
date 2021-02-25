@@ -11,6 +11,7 @@ class UDPClient {
 
     System.out.println ("Attemping to connect to IP: " + ip + " via UDP port 6000\n");
     int pacotesPerdidos = 0; // Variável para controle de perda de pacotes.
+    new Thread();
     
     for (int i = 1; i <= qdeTentativas; i++)
     {
@@ -61,6 +62,7 @@ class UDPClient {
       catch (IOException ex) {
         System.err.println(ex);
       }
+      Thread.sleep(1000);
     }
     if (qdeTentativas >= 10){
       System.out.println("\nRTT médio: ");
