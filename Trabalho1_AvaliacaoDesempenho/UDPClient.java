@@ -54,7 +54,7 @@ class UDPClient {
           int port = receivePacket.getPort();
 
           rttPacote = recebimento - envio;
-          System.out.println (sentence + "  |  Success  | RTT: " + rttPacote + "ms");
+          System.out.println (sentence + "  |  Success  | RTT: " + rttPacote + " ms");
           pacotesReccebidos ++;
           totalRTT += rttPacote;
         }
@@ -75,7 +75,7 @@ class UDPClient {
       Thread.sleep(1000);
     }
     if (qdeTentativas >= 10){
-      System.out.println("\nRTT médio: " + totalRTT / pacotesReccebidos + "ms");
+      System.out.println("\nRTT médio: " + totalRTT / pacotesReccebidos + " ms");
       System.out.println("Taxa de perda de pacotes: " + (pacotesPerdidos * 100) / qdeTentativas + "%");
     }
   } 
