@@ -17,7 +17,6 @@ class UDPClient {
     Long envio, recebimento; // Variáveis para obtenção do tempo.
     double rttPacote; // Variável que guarda o RTT de 1 comunicação.
     double totalRTT = 0; // Variável para somatório de todos os RTTs.
-    new Thread();
     
     for (int i = 1; i <= qdeTentativas; i++)
     {
