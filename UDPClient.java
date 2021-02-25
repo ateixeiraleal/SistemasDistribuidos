@@ -1,5 +1,7 @@
 import java.io.*; 
-import java.net.*; 
+import java.net.*;
+import java.util.Date;
+
   
 class UDPClient { 
   public static void main(String args[]) throws Exception 
@@ -11,6 +13,10 @@ class UDPClient {
 
     System.out.println ("Attemping to connect to IP: " + ip + " via UDP port 6000\n");
     int pacotesPerdidos = 0; // Variável para controle de perda de pacotes.
+    int pacotesReccebidos = 0; // Variável para controle de pacotes recebidos.
+    Long envio, recebimento; // Variáveis para obtenção do tempo.
+    double rttPacote; // Variável que guarda o RTT de 1 comunicação.
+    double totalRTT = 0; // Variável para somatório de todos os RTTs.
     new Thread();
     
     for (int i = 1; i <= qdeTentativas; i++)
@@ -30,7 +36,8 @@ class UDPClient {
 
         DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, 6000);
     
-        clientSocket.send(sendPacket); 
+        clientSocket.send(sendPacket);
+        envio = new Date().getTime();
     
         DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length); 
 
@@ -38,20 +45,23 @@ class UDPClient {
 
         try
         {
-          clientSocket.receive(receivePacket); 
+          clientSocket.receive(receivePacket);
+          recebimento = new Date().getTime();
           String modifiedSentence = new String(receivePacket.getData()); 
   
           InetAddress returnIPAddress = receivePacket.getAddress();
     
           int port = receivePacket.getPort();
 
-          System.out.println (sentence + "  |  Success  | RTT: ");
-
+          rttPacote = recebimento - envio;
+          System.out.println (sentence + "  |  Success  | RTT: " + rttPacote + "ms");
+          pacotesReccebidos ++;
+          totalRTT += rttPacote;
         }
         catch (SocketTimeoutException ste)
         {
-          pacotesPerdidos ++;
           System.out.println (sentence + "  |  Timeout Occurred: Packet assumed lost");
+          pacotesPerdidos ++;
         }
     
         clientSocket.close(); 
@@ -65,7 +75,7 @@ class UDPClient {
       Thread.sleep(1000);
     }
     if (qdeTentativas >= 10){
-      System.out.println("\nRTT médio: ");
+      System.out.println("\nRTT médio: " + totalRTT / pacotesReccebidos + "ms");
       System.out.println("Taxa de perda de pacotes: " + (pacotesPerdidos * 100) / qdeTentativas + "%");
     }
   } 
